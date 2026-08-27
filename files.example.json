@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "cwd": "/workspace",
+  "directories": [
+    {
+      "path": "/workspace/src",
+      "mode": 493
+    },
+    {
+      "path": "/workspace/.pi/skills/check-memory",
+      "mode": 493
+    }
+  ],
+  "files": {
+    "/workspace/AGENTS.md": {
+      "encoding": "utf8",
+      "data": "This workspace exists only in memory. Test read, write, edit, ls, find, grep, and bash before reporting success.\n",
+      "mode": 420
+    },
+    "/workspace/.pi/skills/check-memory/SKILL.md": {
+      "encoding": "utf8",
+      "data": "---\nname: check-memory\ndescription: Verify that all workspace tools operate only on the in-memory filesystem\n---\n\nCreate a small file, read it, edit it, locate it with find and grep, and inspect it through bash. Clean up temporary files when finished.\n",
+      "mode": 420
+    },
+    "/workspace/src/hello.txt": {
+      "encoding": "utf8",
+      "data": "hello from memory\n",
+      "mode": 420
+    }
+  },
+  "symlinks": {}
+}

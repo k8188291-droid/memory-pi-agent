@@ -1,0 +1,21 @@
+{
+  "name": "memory-pi-agent",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Pi Agent with an agent-visible, fully in-memory filesystem",
+  "engines": {
+    "node": ">=22.19.0"
+  },
+  "scripts": {
+    "start": "node memory-pi-agent.js",
+    "test": "node --test test/*.test.js"
+  },
+  "dependencies": {
+    "@earendil-works/pi-ai": "0.84.3",
+    "@earendil-works/pi-coding-agent": "0.84.3",
+    "just-bash": "3.4.2",
+    "minimatch": "10.2.5",
+    "yaml": "2.9.0"
+  }
+}

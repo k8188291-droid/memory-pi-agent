@@ -1,0 +1,14 @@
+node_modules/
+
+# Local environment and logs
+.env
+.env.*
+!.env.example
+*.log
+
+# --fs snapshots may contain OAuth tokens and private session history
+temp.json
+files.json
+*.snapshot.json
+*.state.json
+*.local.json
