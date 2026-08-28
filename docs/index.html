@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Memory Pi Agent — 在完全位於記憶體的檔案系統中，安全執行一次 Pi Agent turn。"
+    />
+    <meta name="theme-color" content="#ffffff" />
+    <title>Memory Pi Agent</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="terminal" id="terminal" aria-label="Memory Pi Agent interactive terminal">
+      <div class="terminal__output" id="output" aria-live="polite">
+        <pre class="logo" aria-label="Memory Pi Agent">
+ _ __ ___   ___ _ __ ___   ___  _ __ _   _
+| '_ ` _ \ / _ \ '_ ` _ \ / _ \| '__| | | |
+| | | | | |  __/ | | | | | (_) | |  | |_| |
+|_| |_| |_|\___|_| |_| |_|\___/|_|   \__, |
+                                      |___/</pre
+        >
+
+        <section class="intro" aria-labelledby="intro-title">
+          <h1 id="intro-title">Memory Pi Agent</h1>
+          <p>
+            一次只執行一個 Agent turn。Agent 看見的 workspace、skills、prompts、session，
+            全部都在同一個 <span class="accent">InMemoryFs</span> 裡。
+          </p>
+          <p class="muted">The host stays outside. The agent works inside memory.</p>
+        </section>
+
+        <section class="quickstart" aria-label="Quick start">
+          <p><strong>QUICK START</strong></p>
+          <button class="command-copy" type="button" data-copy="git clone https://github.com/k8188291-droid/memory-pi-agent.git" aria-label="Copy git clone command">
+            <span class="prompt-mark">$</span> git clone https://github.com/k8188291-droid/memory-pi-agent.git
+          </button>
+          <button class="command-copy" type="button" data-copy="cd memory-pi-agent && npm install" aria-label="Copy install command">
+            <span class="prompt-mark">$</span> cd memory-pi-agent &amp;&amp; npm install
+          </button>
+          <button class="command-copy" type="button" data-copy="node memory-pi-agent.js -p &quot;測試所有工具&quot;" aria-label="Copy run command">
+            <span class="prompt-mark">$</span> node memory-pi-agent.js -p "測試所有工具"
+          </button>
+        </section>
+
+        <section class="command-list" aria-label="Available commands">
+          <p>
+            Commands:
+            <button type="button" data-command="about">about</button>,
+            <button type="button" data-command="quickstart">quickstart</button>,
+            <button type="button" data-command="architecture">architecture</button>,
+            <button type="button" data-command="security">security</button>,
+            <button type="button" data-command="snapshot">snapshot</button>,
+            <button type="button" data-command="github">github</button>,
+            <button type="button" data-command="help">help</button>
+          </p>
+          <p class="muted">點擊指令，或在下方輸入。試試 <span class="accent">architecture</span>。</p>
+        </section>
+      </div>
+
+      <form class="terminal__prompt" id="command-form" autocomplete="off">
+        <label class="sr-only" for="command-input">Terminal command</label>
+        <span class="prompt-mark" aria-hidden="true">$</span>
+        <input
+          id="command-input"
+          name="command"
+          type="text"
+          inputmode="text"
+          autocapitalize="none"
+          autocomplete="off"
+          spellcheck="false"
+          aria-describedby="command-hint"
+        />
+      </form>
+      <p class="sr-only" id="command-hint">輸入 help 查看可用指令，按 Enter 執行。</p>
+
+      <footer>
+        <span>memory-pi-agent v1.0.0</span>
+        <a href="https://github.com/k8188291-droid/memory-pi-agent" rel="noreferrer">GitHub ↗</a>
+      </footer>
+    </main>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="./app.js" defer></script>
+  </body>
+</html>
