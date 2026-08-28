@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Memory Pi Agent browser demo — run the Pi agent loop and just-bash tools against an in-memory filesystem directly in your browser."
+    />
+    <meta name="theme-color" content="#ffffff" />
+    <title>Memory Pi Agent · Browser Demo</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand__mark" aria-hidden="true">π:</span>
+          <span>memory-pi-agent</span>
+          <span class="muted">/ browser runtime</span>
+        </div>
+        <div class="runtime-status" aria-live="polite">
+          <span class="status-dot" id="status-dot"></span>
+          <span id="status-text">ready · memfs mounted</span>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <section class="terminal-pane" aria-labelledby="demo-title">
+          <div class="terminal-pane__intro">
+            <pre class="logo" aria-hidden="true"> _ __ ___   ___ _ __ ___   ___  _ __ _   _
+| '_ ` _ \ / _ \ '_ ` _ \ / _ \| '__| | | |
+| | | | | |  __/ | | | | | (_) | |  | |_| |
+|_| |_| |_|\___|_| |_| |_|\___/|_|   \__, |
+                                      |___/</pre>
+            <div>
+              <h1 id="demo-title">Pi Agent is running inside this page.</h1>
+              <p>
+                真正的 <span class="accent">Pi agent loop</span>、
+                <span class="accent">just-bash</span> 與
+                <span class="accent">InMemoryFs</span>。所有工具都只看得到右側的虛擬 workspace。
+              </p>
+            </div>
+          </div>
+
+          <div class="controls" aria-label="Runtime settings">
+            <label>
+              <span>runtime</span>
+              <select id="mode-select">
+                <option value="local">local deterministic demo</option>
+                <option value="openai">live OpenAI API</option>
+              </select>
+            </label>
+            <label id="model-field" hidden>
+              <span>model</span>
+              <select id="model-select">
+                <option value="gpt-5.4-mini">gpt-5.4-mini</option>
+                <option value="gpt-5.4-nano">gpt-5.4-nano</option>
+                <option value="gpt-4.1-mini">gpt-4.1-mini</option>
+              </select>
+            </label>
+            <label class="key-field" id="key-field" hidden>
+              <span>OpenAI API key · memory only</span>
+              <input id="api-key" type="password" placeholder="sk-…" autocomplete="off" spellcheck="false" />
+            </label>
+            <button class="quiet-button" id="reset-button" type="button">reset memfs</button>
+          </div>
+
+          <div class="mode-note" id="mode-note">
+            <span class="accent">local demo</span> uses Pi's scripted model so the complete agent/tool loop runs without a key or network.
+          </div>
+
+          <div class="transcript" id="transcript" role="log" aria-live="polite" aria-label="Agent transcript">
+            <article class="message message--system">
+              <div class="message__label">system</div>
+              <div class="message__body">/workspace mounted in memory · tools: read, write, edit, ls, bash</div>
+            </article>
+          </div>
+
+          <div class="examples" aria-label="Example prompts">
+            <span class="muted">try:</span>
+            <button type="button" data-prompt="建立一個 browser-demo.txt，寫下目前環境的三個特點，再用 bash 列出並讀取它。">create + inspect a file</button>
+            <button type="button" data-prompt="檢查 /workspace 裡有哪些檔案，建立 summary.md 並整理結果。">inspect workspace</button>
+          </div>
+
+          <form class="prompt-form" id="prompt-form">
+            <label class="sr-only" for="prompt-input">Prompt</label>
+            <span class="prompt-mark" aria-hidden="true">$</span>
+            <textarea id="prompt-input" rows="2" required>建立一個 browser-demo.txt，寫下目前環境的三個特點，再用 bash 列出並讀取它。</textarea>
+            <button class="run-button" id="run-button" type="submit">run agent ↵</button>
+            <button class="stop-button" id="stop-button" type="button" hidden>stop</button>
+          </form>
+        </section>
+
+        <aside class="memory-pane" aria-labelledby="memory-title">
+          <div class="memory-pane__header">
+            <div>
+              <span class="eyebrow">IN-MEMORY FILESYSTEM</span>
+              <h2 id="memory-title">/workspace</h2>
+            </div>
+            <span class="memory-badge">volatile</span>
+          </div>
+          <div class="memory-map" id="memory-map">
+            <div class="empty-state">
+              <span>workspace/</span>
+              <small>Run the agent to create files.</small>
+            </div>
+          </div>
+          <div class="boundary">
+            <div class="boundary__line"><span>browser</span><b>visible</b></div>
+            <div class="boundary__line"><span>host filesystem</span><b>blocked</b></div>
+            <div class="boundary__line"><span>subprocess</span><b>blocked</b></div>
+          </div>
+        </aside>
+      </main>
+
+      <footer>
+        <span>Nothing is persisted. Reloading clears the runtime.</span>
+        <a href="https://github.com/k8188291-droid/memory-pi-agent" rel="noreferrer">source on GitHub ↗</a>
+      </footer>
+    </div>
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>

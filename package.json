@@ -9,13 +9,21 @@
   },
   "scripts": {
     "start": "node memory-pi-agent.js",
+    "dev": "vite --config vite.config.js",
+    "dev:web": "vite --config vite.config.js",
+    "build:web": "vite build --config vite.config.js",
     "test": "node --test test/*.test.js"
   },
   "dependencies": {
+    "@earendil-works/pi-agent-core": "0.84.3",
     "@earendil-works/pi-ai": "0.84.3",
     "@earendil-works/pi-coding-agent": "0.84.3",
+    "fflate": "0.8.2",
     "just-bash": "3.4.2",
     "minimatch": "10.2.5",
     "yaml": "2.9.0"
+  },
+  "devDependencies": {
+    "vite": "7.1.7"
   }
 }
