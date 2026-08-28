@@ -4,7 +4,11 @@ const elements = {
   form: document.querySelector("#prompt-form"),
   prompt: document.querySelector("#prompt-input"),
   mode: document.querySelector("#mode-select"),
-  model: document.querySelector("#model-select"),
+  format: document.querySelector("#format-select"),
+  formatField: document.querySelector("#format-field"),
+  endpoint: document.querySelector("#endpoint-input"),
+  endpointField: document.querySelector("#endpoint-field"),
+  model: document.querySelector("#model-input"),
   modelField: document.querySelector("#model-field"),
   key: document.querySelector("#api-key"),
   keyField: document.querySelector("#key-field"),
@@ -98,11 +102,13 @@ function handleAgentEvent(event) {
 }
 
 function updateMode() {
-  const live = elements.mode.value === "openai";
+  const live = elements.mode.value === "compatible";
+  elements.formatField.hidden = !live;
+  elements.endpointField.hidden = !live;
   elements.modelField.hidden = !live;
   elements.keyField.hidden = !live;
   elements.modeNote.innerHTML = live
-    ? '<span class="accent">live mode</span> runs the same browser agent and memfs tools with the OpenAI Responses API. The key stays only in this tab\'s memory and is never persisted by this app.'
+    ? '<span class="accent">direct compatible mode</span> sends requests from this browser to your endpoint. Endpoint, model ID and key are never persisted; the endpoint must allow browser CORS and tool calling.'
     : '<span class="accent">local demo</span> uses Pi\'s scripted model so the complete agent/tool loop runs without a key or network.';
 }
 
@@ -128,7 +134,9 @@ elements.form.addEventListener("submit", async (event) => {
       mode: elements.mode.value,
       prompt,
       apiKey: elements.key.value,
+      endpoint: elements.endpoint.value,
       modelId: elements.model.value,
+      apiFormat: elements.format.value,
       onEvent: handleAgentEvent,
     });
     await renderFiles();

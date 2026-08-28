@@ -2,7 +2,7 @@
 
 > [Interactive project page](https://k8188291-droid.github.io/memory-pi-agent/)
 
-瀏覽器 demo 會直接在頁面中執行 Pi agent loop、just-bash 與同一個 `InMemoryFs`。預設 deterministic demo 不需要網路；Live OpenAI 模式使用的 API key 只保留在目前分頁的記憶體中。
+瀏覽器 demo 會直接在頁面中執行 Pi agent loop、just-bash 與同一個 `InMemoryFs`。預設 deterministic demo 不需要網路；OpenAI-compatible 模式可自行設定 API format、endpoint、model ID 與 API key，所有設定只保留在目前分頁的記憶體中。自訂 endpoint 必須允許 browser CORS，且模型需支援 tool/function calling。
 
 這是一個以 Pi SDK 建立的單次執行 Agent。Agent 能看到的檔案系統完全位於記憶體中：
 

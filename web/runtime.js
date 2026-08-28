@@ -1,18 +1,57 @@
 import { Agent } from "@earendil-works/pi-agent-core";
 import {
-  InMemoryCredentialStore,
   Type,
-  createModels,
   fauxAssistantMessage,
   fauxProvider,
   fauxText,
   fauxToolCall,
 } from "@earendil-works/pi-ai";
-import { openaiProvider } from "@earendil-works/pi-ai/providers/openai";
+import { openAICompletionsApi } from "@earendil-works/pi-ai/api/openai-completions.lazy";
+import { openAIResponsesApi } from "@earendil-works/pi-ai/api/openai-responses.lazy";
 import { Bash, InMemoryFs } from "just-bash";
 
 const WORKSPACE = "/workspace";
 const MAX_FILESYSTEM_BYTES = 32 * 1024 * 1024;
+const COMPATIBLE_API_FORMATS = new Set(["responses", "chat-completions"]);
+
+export function normalizeCompatibleEndpoint(endpoint, apiFormat = "responses") {
+  if (!COMPATIBLE_API_FORMATS.has(apiFormat)) throw new Error(`Unsupported API format: ${apiFormat}`);
+
+  const value = endpoint?.trim().replace(/\/+$/, "");
+  if (!value) throw new Error("Endpoint is required for compatible mode");
+
+  let url;
+  try {
+    url = new URL(value);
+  } catch {
+    throw new Error("Endpoint must be an absolute http(s) URL");
+  }
+  if (url.protocol !== "https:" && url.protocol !== "http:") {
+    throw new Error("Endpoint must use http or https");
+  }
+
+  const suffix = apiFormat === "responses" ? "/responses" : "/chat/completions";
+  const baseUrl = url.toString().replace(/\/+$/, "");
+  return baseUrl.endsWith(suffix) ? baseUrl.slice(0, -suffix.length) : baseUrl;
+}
+
+export function createCompatibleModel({ endpoint, modelId, apiFormat = "responses" }) {
+  const id = modelId?.trim();
+  if (!id) throw new Error("Model ID is required for compatible mode");
+
+  return {
+    id,
+    name: id,
+    api: apiFormat === "chat-completions" ? "openai-completions" : "openai-responses",
+    provider: "openai",
+    baseUrl: normalizeCompatibleEndpoint(endpoint, apiFormat),
+    reasoning: false,
+    input: ["text"],
+    cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+    contextWindow: 128_000,
+    maxTokens: 32_768,
+  };
+}
 
 function normalizePath(path, cwd = WORKSPACE) {
   const raw = path.startsWith("/") ? path : `${cwd}/${path}`;
@@ -202,7 +241,7 @@ export class BrowserAgentRuntime {
     return output;
   }
 
-  async run({ mode, prompt, apiKey, modelId, onEvent }) {
+  async run({ mode, prompt, apiKey, endpoint, modelId, apiFormat, onEvent }) {
     await this.ready;
     if (this.activeAgent?.state.isStreaming) throw new Error("Agent is already running");
 
@@ -214,17 +253,14 @@ export class BrowserAgentRuntime {
       model = faux.getModel();
       streamFn = faux.provider.streamSimple.bind(faux.provider);
     } else {
-      if (!apiKey?.trim()) throw new Error("OpenAI API key is required for live mode");
-      const credentials = new InMemoryCredentialStore();
-      await credentials.modify("openai", async () => ({ type: "api_key", key: apiKey.trim() }));
-      const models = createModels({
-        credentials,
-        authContext: { env: async () => undefined, fileExists: async () => false },
+      if (!apiKey?.trim()) throw new Error("API key is required for compatible mode");
+      model = createCompatibleModel({ endpoint, modelId, apiFormat });
+      const api = apiFormat === "chat-completions" ? openAICompletionsApi() : openAIResponsesApi();
+      streamFn = (requestModel, context, options) => api.streamSimple(requestModel, context, {
+        ...options,
+        apiKey: apiKey.trim(),
+        transport: "sse",
       });
-      models.setProvider(openaiProvider());
-      model = models.getModel("openai", modelId);
-      if (!model) throw new Error(`Unknown OpenAI model: ${modelId}`);
-      streamFn = (requestModel, context, options) => models.streamSimple(requestModel, context, { ...options, transport: "sse" });
     }
 
     const agent = new Agent({
@@ -236,7 +272,7 @@ export class BrowserAgentRuntime {
           "Prefer /workspace for files. Never claim access to the browser host filesystem or subprocesses.",
         ].join("\n"),
         model,
-        thinkingLevel: mode === "local" ? "off" : "low",
+        thinkingLevel: "off",
         tools: this.tools,
         messages: [],
       },

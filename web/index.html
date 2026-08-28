@@ -48,20 +48,27 @@
               <span>runtime</span>
               <select id="mode-select">
                 <option value="local">local deterministic demo</option>
-                <option value="openai">live OpenAI API</option>
+                <option value="compatible">OpenAI-compatible endpoint</option>
               </select>
             </label>
-            <label id="model-field" hidden>
-              <span>model</span>
-              <select id="model-select">
-                <option value="gpt-5.4-mini">gpt-5.4-mini</option>
-                <option value="gpt-5.4-nano">gpt-5.4-nano</option>
-                <option value="gpt-4.1-mini">gpt-4.1-mini</option>
+            <label id="format-field" hidden>
+              <span>API format</span>
+              <select id="format-select">
+                <option value="responses">Responses API</option>
+                <option value="chat-completions">Chat Completions</option>
               </select>
+            </label>
+            <label class="endpoint-field" id="endpoint-field" hidden>
+              <span>base URL / endpoint</span>
+              <input id="endpoint-input" type="url" value="https://api.openai.com/v1" placeholder="https://api.example.com/v1" autocomplete="off" spellcheck="false" />
+            </label>
+            <label class="model-field" id="model-field" hidden>
+              <span>model ID</span>
+              <input id="model-input" type="text" value="gpt-5.4-mini" placeholder="provider/model-name" autocomplete="off" spellcheck="false" />
             </label>
             <label class="key-field" id="key-field" hidden>
-              <span>OpenAI API key · memory only</span>
-              <input id="api-key" type="password" placeholder="sk-…" autocomplete="off" spellcheck="false" />
+              <span>API key · memory only</span>
+              <input id="api-key" type="password" placeholder="key is never persisted" autocomplete="off" spellcheck="false" />
             </label>
             <button class="quiet-button" id="reset-button" type="button">reset memfs</button>
           </div>

@@ -4,7 +4,10 @@ on:
   push:
     branches: [master]
     paths:
-      - "docs/**"
+      - "web/**"
+      - "package.json"
+      - "package-lock.json"
+      - "vite.config.js"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 

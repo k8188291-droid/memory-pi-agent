@@ -88,7 +88,7 @@ h2 { margin-top: 3px; font-size: 14px; font-weight: 600; }
 .controls label { display: grid; gap: 4px; }
 .controls label > span, .eyebrow { color: var(--muted); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
 
-select, .key-field input {
+select, .key-field input, .endpoint-field input, .model-field input {
   height: 32px;
   border: 1px solid #cfcbc4;
   border-radius: 0;
@@ -98,8 +98,8 @@ select, .key-field input {
 }
 
 select { min-width: 220px; padding: 0 30px 0 8px; }
-.key-field { flex: 1; min-width: 240px; }
-.key-field input { width: 100%; padding: 0 8px; }
+.key-field, .endpoint-field, .model-field { flex: 1; min-width: 220px; }
+.key-field input, .endpoint-field input, .model-field input { width: 100%; padding: 0 8px; }
 select:focus, input:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
 
 .quiet-button, .examples button {
